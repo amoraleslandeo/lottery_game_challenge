@@ -6,8 +6,8 @@ import formatCurrency from '@/helpers/formatCurrency';
 import { TDraw } from '@/types/types';
 import { Box, Typography } from '@mui/material';
 
-const DetailPage = async ({ params }: { params: { id: string } }) => {
-    const { id } = await params
+const DetailPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+    const id = (await (params)).id
 
     // api to fetch information about the draw
     const url = `https://interview-api.lottobillions.com/draws/${id}`;
@@ -16,7 +16,7 @@ const DetailPage = async ({ params }: { params: { id: string } }) => {
 
     // if the response is not successful (Error), show a redirect button
     if (!res.ok) {
-        return <div><ButtonRedirect /></div>
+        return <ButtonRedirect />
     }
 
     const data = await res.json(); // convert the api res to JSON format
