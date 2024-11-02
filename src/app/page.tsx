@@ -1,95 +1,54 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { Card } from "@/components/Card/Card";
+import { TDraws } from "@/types/types";
+import { Box } from "@mui/material";
 
-export default function Home() {
+const Home = async () => {
+  // Fetches draws from the api
+  const url = 'https://interview-api.lottobillions.com/draws';
+  const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+
+  // Error message if the response was not successful
+  if (!res.ok) {
+    alert('Error al cargar los datos');
+  }
+
+  // convert the response data into JSON format
+  const drawsInfo: TDraws[] = await res.json();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <Box
+      component='main'
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        p: '40px',
+        maxWidth: '1200px',
+        height: '100%',
+        m: '0px auto',
+      }}
+    >
+      <Box
+        component='div'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '32px',
+          gridRowStart: 2
+        }}
+      >
+        {drawsInfo.map((draw) => {
+          return <Card
+            key={draw.id}
+            image={draw.logo}
+            name={draw.name}
+            price={draw.jackpot.amount}
+            id={draw.id} />
+        })
+        }
+      </Box>
+    </Box>
   );
 }
+
+export default Home
