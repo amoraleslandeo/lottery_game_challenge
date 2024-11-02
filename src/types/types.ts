@@ -21,5 +21,5 @@ export type TDraw = TDraws & {
 
 export type TSaveDraw = {
   drawId: string;
-  numbers: Number[];
+  numbers: number[];
 };
